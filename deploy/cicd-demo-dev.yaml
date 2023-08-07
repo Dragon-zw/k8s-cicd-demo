@@ -40,7 +40,7 @@ spec:
             timeoutSeconds: 10
             failureThreshold: 30
             periodSeconds: 5
-          imagePullPolicy: Always
+          imagePullPolicy: Always # 每次拉取的镜像都是最新的版本 latest
           ports:
             - containerPort: 8080
               protocol: TCP
