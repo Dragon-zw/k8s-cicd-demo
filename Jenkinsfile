@@ -101,17 +101,18 @@ echo "mvn sonar:sonar -Dsonar.projectKey=$APP_NAME"''' // Sonarqube 会创建 $A
       steps {
         // container('maven') {
           input(id: 'deploy-to-dev', message: 'deploy to dev?')
-          withCredentials([kubeconfigContent(credentialsId : 'kubeconfig-id' ,variable : 'ADMIN_KUBECONFIG' ,)]) {
+
+          // withCredentials([kubeconfigContent(credentialsId : '$KUBECONFIG_CREDENTIAL_ID' ,variable : 'ADMIN_KUBECONFIG' ,)]) { // KUBECONFIG_CREDENTIAL_ID
             sh 'mkdir -p ~/.kube/'
             sh 'echo "$ADMIN_KUBECONFIG" > ~/.kube/config'
-            sh '''sed -i\'\' "s#REGISTRY#$REGISTRY#" deploy/cicd-demo-dev.yaml
-                  sed -i\'\' "s#DOCKERHUB_NAMESPACE#$DOCKERHUB_NAMESPACE#" deploy/cicd-demo-dev.yaml
-                  sed -i\'\' "s#APP_NAME#$APP_NAME#" deploy/cicd-demo-dev.yaml
-                  sed -i\'\' "s#BUILD_NUMBER#$BUILD_NUMBER#" deploy/cicd-demo-dev.yaml
+            sh '''sed -i\'\' "s#REGISTRY#$REGISTRY#"                        deploy/cicd-demo-dev.yaml
+                  sed -i\'\' "s#DOCKERHUB_NAMESPACE#$DOCKERHUB_NAMESPACE#"  deploy/cicd-demo-dev.yaml
+                  sed -i\'\' "s#APP_NAME#$APP_NAME#"                        deploy/cicd-demo-dev.yaml
+                  sed -i\'\' "s#BUILD_NUMBER#$BUILD_NUMBER#"                deploy/cicd-demo-dev.yaml
 
                   kubectl apply -f deploy/cicd-demo-dev.yaml'''
           // }
-        }
+        // }
       }
     }
 
@@ -148,10 +149,10 @@ echo "mvn sonar:sonar -Dsonar.projectKey=$APP_NAME"''' // Sonarqube 会创建 $A
       steps {
         input(message: 'deploy to production?', submitter: '')
         // container('maven') {
-          sh '''sed -i\'\' "s#REGISTRY#$REGISTRY#" deploy/cicd-demo.yaml
-                sed -i\'\' "s#DOCKERHUB_NAMESPACE#$DOCKERHUB_NAMESPACE#" deploy/cicd-demo.yaml
-                sed -i\'\' "s#APP_NAME#$APP_NAME#" deploy/cicd-demo.yaml
-                sed -i\'\' "s#TAG_NAME#$TAG_NAME#" deploy/cicd-demo.yaml
+          sh '''sed -i\'\' "s#REGISTRY#$REGISTRY#"                        deploy/cicd-demo.yaml
+                sed -i\'\' "s#DOCKERHUB_NAMESPACE#$DOCKERHUB_NAMESPACE#"  deploy/cicd-demo.yaml
+                sed -i\'\' "s#APP_NAME#$APP_NAME#"                        deploy/cicd-demo.yaml
+                sed -i\'\' "s#TAG_NAME#$TAG_NAME#"                        deploy/cicd-demo.yaml
 
                 kubectl apply -f deploy/cicd-demo.yaml'''
         // }
