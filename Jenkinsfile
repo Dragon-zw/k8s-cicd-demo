@@ -54,6 +54,7 @@ echo "mvn sonar:sonar -Dsonar.projectKey=$APP_NAME"''' // Sonarqube 会创建 $A
             // }
           }
 
+          // Jenkins在分析代码审查分析的结果发给服务端进行验证是否通过的时间
           timeout(unit: 'MINUTES', activity: true, time: 5) { // 设置超时时间
             waitForQualityGate 'true'
           }
@@ -160,3 +161,4 @@ echo "mvn sonar:sonar -Dsonar.projectKey=$APP_NAME"''' // Sonarqube 会创建 $A
     }
   }
 }
+
