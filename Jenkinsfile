@@ -125,6 +125,7 @@ echo "mvn sonar:sonar -Dsonar.projectKey=$APP_NAME"''' // Sonarqube 会创建 $A
         }
       }
       steps {
+        // input(id: 'release-image-with-tag', message: "release image with tag?")
         input(message: 'release image with tag?', submitter: '') // 接受一个输入值，必须是 true 才能部署
         withCredentials([usernamePassword(credentialsId : 'gitlab-user-pass' ,passwordVariable : 'GIT_PASSWORD' ,usernameVariable : 'GIT_USERNAME' ,)]) {
           sh 'git config --global user.email "zhongzhiwei@kubesphere.io" '
@@ -134,7 +135,9 @@ echo "mvn sonar:sonar -Dsonar.projectKey=$APP_NAME"''' // Sonarqube 会创建 $A
         }
 
         // container('maven') {
+          // 重新给镜像打标签
           sh 'docker tag $REGISTRY/$DOCKERHUB_NAMESPACE/$APP_NAME:SNAPSHOT-$BUILD_NUMBER $REGISTRY/$DOCKERHUB_NAMESPACE/$APP_NAME:$TAG_NAME'
+          // 推送镜像
           sh 'docker push $REGISTRY/$DOCKERHUB_NAMESPACE/$APP_NAME:$TAG_NAME'
         // }
       }
@@ -148,6 +151,7 @@ echo "mvn sonar:sonar -Dsonar.projectKey=$APP_NAME"''' // Sonarqube 会创建 $A
         }
       }
       steps {
+        // input(id: 'deploy-to-production', message: "deploy to production?")
         input(message: 'deploy to production?', submitter: '')
         // container('maven') {
           sh '''sed -i\'\' "s#REGISTRY#$REGISTRY#"                        deploy/cicd-demo.yaml
@@ -161,4 +165,3 @@ echo "mvn sonar:sonar -Dsonar.projectKey=$APP_NAME"''' // Sonarqube 会创建 $A
     }
   }
 }
-
